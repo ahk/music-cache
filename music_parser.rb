@@ -12,35 +12,6 @@ require "lib/folder"
 @@unknown_tag = Array.new
 @@all_artists = Array.new
 
-def find_or_create_new_folder(folder, artist, album)
-  artist_path = File.join(@destination, artist)
-  if File.directory?(artist_path)
-    album_path = File.join(artist_path, album)
-    if File.directory?(album_path)
-      puts "#{artist} - #{album} already exist"
-    else
-      #puts "Need to create #{album} for #{artist}"
-      if @enact == true
-        Dir.mkdir(album_path)
-        File.move(folder, album_path, true)
-      else
-      end
-      puts "#{folder} -> #{album_path}"
-    end
-  else
-    #puts "Folder #{artist_path} needs to be created"
-      album_path = File.join(artist_path, album)
-    if @enact == true
-      Dir.mkdir(artist_path)
-      Dir.mkdir(album_path)
-      File.move(folder, album_path, true)
-    else
-    end
-    puts "#{folder} -> #{album_path}"
-  end
-
-end
-
 if $0 == __FILE__
   path = ARGV[0]
   @destination = ARGV[1] || "/Volumes/Music/"

@@ -32,7 +32,10 @@ class Folder
       end
     end
 
-    return false if artist.uniq.length > 1 || artist.length == 0 || artist.first.nil?
+    if artist.uniq.length > 1 || artist.length == 0 || artist.first.nil?
+      @@nonuniform_artists << folder
+      return false
+    end
     return true
   end
 
@@ -45,7 +48,10 @@ class Folder
       end
     end
 
-    return false if album.uniq.length > 1 || album.length == 0 || album.first.nil?
+    if album.uniq.length > 1 || album.length == 0 || album.first.nil?
+      @@nonuniform_albums << folder
+      return false
+    end
     return true
   end
 
@@ -58,7 +64,10 @@ class Folder
       end
     end
 
-    return false if album.length != album.last.to_i || album.length == 0
+    if album.length != album.last.to_i || album.length == 0
+      @@incomplete_tracks << folder
+      return false
+    end
     return true
   end
 
@@ -84,7 +93,8 @@ class Folder
       FileUtils.mv(Dir.glob(File.join(folder, "*.mp3")), File.join(destination, artist, album)) if enact == true
       puts "#{artist} - #{album} Files moved"
     else
-      puts "Audio files already exist in the destination folder for #{artist}: #{album}"
+      @@already_files << folder
+      puts = "Audio files already exist in the destination folder for #{artist}: #{album}"
     end
 
 

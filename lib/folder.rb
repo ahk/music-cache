@@ -136,14 +136,21 @@ class Folder
     return nil if file.nil?
     mp3 = Mp3Info.new(file)
     @@unknown_tag << folder if mp3.tag.album.match(/[^a-zA-Z0-9\_\ \.\-\(\)\:\,\\\+\?\!]/)
-    self.album = mp3.tag.album.strip
+    
+    self.album = cleanASCII mp3.tag.album
   end
 
   def find_artist
     music = File.join(folder, "*.mp3")
     file = Dir.glob(music).first
     mp3 = Mp3Info.new(file)
-    @@unknown_tag << folder if mp3.tag.artist.match(/[^a-zA-Z0-9\_\ \.\-\(\)\:\,\\\+\?\!]/)
-    self.artist = lev_artist_name(mp3.tag.artist.strip)
+    @@unknown_tag << file if mp3.tag.artist.match(/[^a-zA-Z0-9\_\ \.\-\(\)\:\,\\\+\?\!]/)
+    self.artist = lev_artist_name(cleanASCII( mp3.tag.artist ))
   end
+  
+  def cleanASCII(thing)
+    thing = Iconv.conv('utf-8','ISO-8859-1', thing) if mp3.hastag1?
+    thing.strip
+  end
+  
 end

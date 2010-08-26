@@ -60,7 +60,7 @@ if $0 == __FILE__
   end
 
   puts "*** Scan complete ***"
-  now = Time.now.strftime('%Y-%m-%d-%H%M')
+  now = Time.now.strftime('%Y-%m-%d-%H%M%S')
   errors = [@@unknown_tag,@@nonuniform_artists, @@nonuniform_albums, @@already_files, @@incomplete_tracks]
   errors.each do |error_set|
     if error_set.length > 0

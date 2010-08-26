@@ -36,11 +36,11 @@ class String
 
     result = self
 
-    accents.each do |ac,rep|
-      ac.each do |s|
-        result.gsub!(s, rep)
-      end
-    end
+    # accents.each do |ac,rep|
+    #   ac.each do |s|
+    #     result.gsub!(s, rep)
+    #   end
+    # end
 
     # replace quotes by nothing
     result.gsub!(/['"]/, '')

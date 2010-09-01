@@ -2,30 +2,11 @@
 
 $:.unshift("lib/")
 
-#require 'rubygems'
-#require 'ruby-debug'
 require "lib/mp3info"
 require "lib/levenshtein"
 require "lib/transforms"
 require "lib/folder"
-
-class MPErrorSet
-  attr_accessor :errors, :name, :msg
-  
-  def initialize(name, msg = nil)
-    self.msg = msg
-    self.name = name
-    self.errors = []
-  end
-  
-  def length
-    self.errors.length
-  end
-  
-  def <<(thing)
-    self.errors << thing
-  end
-end
+require "lib/error_set"
 
 @@all_artists        = Array.new
 

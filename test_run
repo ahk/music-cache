@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+ruby music_parser.rb "/Users/andrew/Music/iTunes/iTunes Music/Chico Buarque"

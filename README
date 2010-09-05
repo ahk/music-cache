@@ -1,6 +1,6 @@
 Ruby ID3 Sort
 
-The idea of this program is to take an unsorted music folded and move all the tracks to a destination based on the ID3 tagging.0
+The idea of this program is to take an unsorted music folded and move all the tracks to a destination based on the ID3 tagging.
 
 it is executed by:
 ruby music_parser.rb origin destination enact

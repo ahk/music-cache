@@ -5,10 +5,10 @@ class Folder
 
   attr_accessor :folder, :artist, :album, :complete, :tracks, :errors, :artist_list
 
-  def initialize(folder, artist_list)
+  def initialize(folder, runner)
     self.folder = folder
     self.tracks = Array.new
-    self.artist_list = artist_list
+    self.artist_list = runner.all_artists
     self.errors = OpenStruct.new({
       :unknown_tag        => MPErrorSet.new('unknown_tag', 'has an unknown tag'),
       :nonuniform_artists => MPErrorSet.new('nonuniform_artists', 'has nonuniform artists'),
@@ -28,21 +28,21 @@ class Folder
     !!complete
   end
 
-  def migrate_to(destination, enact=nil)
+  def migrate_to(destination)
     #Check if the artist folder exists
     #Check if the album folder exists
     #Check if the album folder is populated
     #Move the music
     if !File.directory?(File.join(destination, artist))
-      Dir.mkdir(File.join(destination, artist)) if enact == true
+      Dir.mkdir(File.join(destination, artist))
     end
 
     if !File.directory?(File.join(destination, artist, album))
-      Dir.mkdir(File.join(destination, artist, album)) if enact == true
+      Dir.mkdir(File.join(destination, artist, album))
     end
 
     if Dir.glob(File.join(destination, artist, album, "*.mp3")).empty?
-      FileUtils.mv(Dir.glob(File.join(folder, "*.mp3")), File.join(destination, artist, album)) if enact == true
+      FileUtils.mv(Dir.glob(File.join(folder, "*.mp3")), File.join(destination, artist, album))
       puts "#{artist} - #{album} Files moved"
     else
       errors.already_files << folder

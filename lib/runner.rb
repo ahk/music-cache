@@ -1,38 +1,46 @@
 class Runner
   
+  attr_accessor :all_artists, :root_dir, :folders, :scan_path, :destination
+  
   def initialize
     @all_artists = Array.new
     @root_dir = File.expand_path(File.dirname($0))
     @folders = Array.new
+    @scan_path = ARGV[0]
+    @destination = ARGV[1]
+    @dry_run = (ARGV[2] != "enact")
+    raise "Must specify a scan path and destination" unless @scan_path && @destination
   end
   
-  def migrate_files
-    path = ARGV[0]
-    @destination = ARGV[1] || "/Volumes/Music/"
-    @enact = (ARGV[2] == "enact")
-
-    files = File.join(path, "**", "*")
+  def run
+    scan
+    log
+    migrate
+  end
+  
+  private
+  
+  def scan
+    files = File.join(@scan_path, "**", "*")
     Dir.glob(files).each do |folder|
       if File.directory?(folder)
         begin
-          puts "Opening: #{folder}"
-          music_folder = Folder.new(folder, @all_artists)
-          @folders << music_folder
-          if music_folder.complete?
-            music_folder.migrate_to(@destination, @enact)
-          end
+          puts "*** Scanning: #{folder} ***"
+          @folders << Folder.new(folder, self)
         rescue Mp3InfoError => e
           puts "Mp3InfoError: #{e} in #{folder}"
         end
       end
     end
-
-    if ARGV.length == 0
-      puts "No file given"
+  end
+  
+  def migrate
+    @folders.each do |music_folder|
+      music_folder.migrate_to(@destination) if music_folder.complete? && !@dry_run
     end
   end
   
-  def record_logs
+  def log
     puts "*** Scan complete ***"
     now = Time.now.strftime('%Y-%m-%d-%H%M%S')
     error_types = [
@@ -58,11 +66,6 @@ class Runner
       end
     end
     
-  end
-  
-  def run
-    migrate_files
-    record_logs
   end
   
 end

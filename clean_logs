@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+rm *.nonuniform_albums
+rm *.nonuniform_artists
+rm *.unknown_tag

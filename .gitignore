@@ -1,2 +1,4 @@
 .DS_Store
 *.unknown_tag
+*.nonuniform_albums
+*.nonuniform_artists

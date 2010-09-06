@@ -27,12 +27,8 @@ private
     files = File.join(@scan_path, "**", "*")
     Dir.glob(files).each do |folder|
       if File.directory?(folder)
-        begin
-          puts "*** Scanning: #{folder} ***"
-          @folders << Folder.new(folder, self)
-        rescue Mp3InfoError => e
-          puts "Mp3InfoError: #{e} in #{folder}"
-        end
+        puts "*** Scanning: #{folder} ***"
+        @folders << Folder.new(folder, self)
       end
     end
   end

@@ -73,16 +73,22 @@ private
   
   def map_tracks
     music = @folder
-    # escape for globbing
+    # escape for Dir globbing
     needs_escape = music.scan(/([\\\?\{\}\[\]\*])/)
     needs_escape.flatten.uniq.each do |str|
       music.gsub!(str, "\\#{str}")
     end
+    
     Dir.glob(File.join(music, "*.mp3")).each do |file|
-      Mp3Info.open(file) do |mp3|
-        @tracks << mp3.tag
+      begin
+        Mp3Info.open(file) do |mp3|
+          @tracks << mp3.tag
+        end
+      rescue Mp3InfoError, NoMethodError => e
+        puts "#{e.class}:#{e} in #{file}"
       end
     end
+    
   end
 
   def uniform_artist?

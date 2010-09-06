@@ -1,27 +1,49 @@
 require 'fileutils'
 require 'ostruct'
+require 'rubygems'
+require 'unicode'
 
 class Folder
+  
+  ERROR_TYPES = [
+    :non_music_folder  ,
+    :unknown_tag       ,
+    :nonuniform_artists,
+    :nonuniform_albums ,
+    :already_files     ,
+    :incomplete_tracks ,
+  ]
+  
+  BAD_TAG = /[^a-zA-Z0-9\_\ \.\-\(\)\:\,\\\+\?\!]/
 
-  attr_accessor :folder, :artist, :album, :complete, :tracks, :errors, :artist_list
+  attr_accessor :folder, :artist, :album, :complete, :tracks, :errors
 
   def initialize(folder, runner)
-    self.folder = folder
-    self.tracks = Array.new
-    self.artist_list = runner.all_artists
-    self.errors = OpenStruct.new({
-      :unknown_tag        => MPErrorSet.new('unknown_tag', 'has an unknown tag'),
+    @folder = folder
+    @tracks = Array.new
+    @artist_list = runner.all_artists
+    @errors = OpenStruct.new({
+      :non_music_folder   => MPErrorSet.new('non_music_folder', 'has no music files as direct children'),
+      :unknown_tag        => MPErrorSet.new('unknown_tag', 'has an unknown tag in it'),
       :nonuniform_artists => MPErrorSet.new('nonuniform_artists', 'has nonuniform artists'),
       :nonuniform_albums  => MPErrorSet.new('nonuniform_albums', 'has nonuniform albums'),
       :already_files      => MPErrorSet.new('already_files', 'already has files in it'),
       :incomplete_tracks  => MPErrorSet.new('incomplete_tracks', "doesn't have as many tracks as the tags think ..."),
     })
-    map_music
-    if uniform_album? && uniform_artist?
-      find_album
-      find_artist
-      self.complete = true
+    
+    map_tracks    
+      
+    if uniform_album? && uniform_artist? && has_all_tracks?
+      @complete = true
     end
+    
+    @album     = find_album
+    @artist    = find_artist
+    @has_music = true if @artist || @album
+  end
+  
+  def has_music?
+    !!has_music
   end
 
   def complete?
@@ -48,16 +70,15 @@ class Folder
       errors.already_files << folder
       puts = "Audio files already exist in the destination folder for #{artist}: #{album}"
     end
-
-
   end
 
-  private
-  def map_music
+private
+  
+  def map_tracks
     music = File.join(folder, "*.mp3")
     Dir.glob(music).each do |file|
       Mp3Info.open(file) do |mp3|
-        tracks << mp3.tag
+        @tracks << mp3.tag
       end
     end
   end
@@ -79,87 +100,112 @@ class Folder
   end
 
   def uniform_album?
-    album = Array.new
+    uniform = false
+    albums = Array.new
     music = File.join(folder, "*.mp3")
+    
     Dir.glob(music).each do |file|
       Mp3Info.open(file) do |mp3|
-        album << mp3.tag.album
+        albums << mp3.tag.album
       end
     end
 
-    if (album.uniq.length > 1) || (album.length == 0) || (album.first.nil?)
+    if (albums.uniq.length > 1)
       errors.nonuniform_albums << folder
-      return false
+    elsif (albums.length == 0) || (albums.uniq.first.nil?)
+      errors.non_music_folder << folder
+    else
+      uniform = true
     end
-    return true
+    
+    uniform
   end
 
   def has_all_tracks?
-    album = Array.new
+    has_all_tracks = false
+    albums = Array.new
     music = File.join(folder, "*.mp3")
+    
     Dir.glob(music).each do |file|
       Mp3Info.open(file) do |mp3|
-        album << mp3.tag.tracknum
+        albums << mp3.tag.tracknum
       end
     end
 
-    if album.length != album.last.to_i || album.length == 0
+    if (albums.length != albums.last.to_i) || (albums.length == 0)
       errors.incomplete_tracks << folder
-      return false
+    else
+      has_all_tracks = true
     end
-    return true
+    
+    has_all_tracks
   end
   
   def lev_artist_name(artist)
     distance_array = Array.new
-    artist_list.each do |old_artist|
+    @artist_list.each do |old_artist|
       distance = Levenshtein.normalized_distance(old_artist, artist)
       distance_array << distance
     end
 
     dist_min = distance_array.min
     if dist_min
-      if dist_min <= 0.15 && dist_min > 0
+      if (dist_min <= 0.15) && (dist_min > 0)
         #We have a slightly duplicated artist
-        puts "#{artist} wants to be called #{artist_list[distance_array.index(dist_min)]}"
-        return artist_list[distance_array.index(dist_min)]
+        canonical_name = @artist_list[distance_array.index(dist_min)]
+        puts "#{artist} wants to be called #{canonical_name}"
+        return canonical_name
       elsif dist_min > 0.15
         #We have a unique artist
-        artist_list << artist
+        @artist_list << artist
         return artist
       else
         #We have already seen this artist exactly
         return artist
       end
     else
-      artist_list << artist
+      @artist_list << artist
       return artist
     end
     return nil
   end
 
-
   def find_album
-    music = File.join(folder, "*.mp3")
+    music = File.join(@folder, "*.mp3")
     file = Dir.glob(music).first
     return nil if file.nil?
     mp3 = Mp3Info.new(file)
-    errors.unknown_tag << folder if mp3.tag.album.match(/[^a-zA-Z0-9\_\ \.\-\(\)\:\,\\\+\?\!]/)
+    album = mp3.tag.album
     
-    self.album = cleanASCII(mp3.tag.album)
+    if album
+      album = cleanASCII(mp3.tag.album)
+      @errors.unknown_tag << @folder if album.match(BAD_TAG)
+    end
+    album
   end
 
   def find_artist
-    music = File.join(folder, "*.mp3")
+    music = File.join(@folder, "*.mp3")
     file = Dir.glob(music).first
+    return nil if file.nil?
     mp3 = Mp3Info.new(file)
-    errors.unknown_tag << file if mp3.tag.artist.match(/[^a-zA-Z0-9\_\ \.\-\(\)\:\,\\\+\?\!]/)
-    self.artist = lev_artist_name(cleanASCII( mp3.tag.artist ))
+    
+    artist = mp3.tag.artist
+    if artist
+      artist = cleanASCII(artist)
+      @errors.unknown_tag << @folder if artist.match(BAD_TAG)
+      artist = lev_artist_name(artist)
+    end
+    artist
   end
   
-  def cleanASCII(thing)
-    thing = Iconv.conv('utf-8','ISO-8859-1', thing)
-    thing.strip
+  def cleanASCII(text)
+    text = Iconv.conv('UTF-8','ISO-8859-1', text).strip
+    # this normalizing may be entirely unecessary.
+    # I don't really understand how to represent ç or ã
+    # as a single utf8 codepoint when written to a file.
+    # it probably doesn't matter. readline seems fine with it?
+    Unicode.normalize_KC(text)
   end
   
 end

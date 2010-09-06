@@ -18,7 +18,7 @@ class Runner
     migrate
   end
   
-  private
+private
   
   def scan
     files = File.join(@scan_path, "**", "*")
@@ -43,15 +43,9 @@ class Runner
   def log
     puts "*** Scan complete ***"
     now = Time.now.strftime('%Y-%m-%d-%H%M%S')
-    error_types = [
-      :unknown_tag,
-      :nonuniform_artists, 
-      :nonuniform_albums, 
-      :already_files,
-      :incomplete_tracks]
       
     @folders.each do |folder|
-      error_types.each do |error_type|
+      Folder::ERROR_TYPES.each do |error_type|
         error_set = folder.errors.send(error_type)
         if error_set.length > 0
           error_file = File.join(@root_dir, now + '.' + error_set.name)

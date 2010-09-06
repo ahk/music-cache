@@ -2,3 +2,5 @@
 rm *.nonuniform_albums
 rm *.nonuniform_artists
 rm *.unknown_tag
+rm *.non_music_folder
+rm *.incomplete_tracks

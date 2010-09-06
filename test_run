@@ -1,2 +1,3 @@
 #!/usr/bin/env sh
+./clean_logs
 ruby music_parser.rb "/Users/andrew/Music/iTunes/iTunes Music/" "/Users/andrew/test_music_sort"

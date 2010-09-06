@@ -72,8 +72,13 @@ class Folder
 private
   
   def map_tracks
-    music = File.join(folder, "*.mp3")
-    Dir.glob(music).each do |file|
+    music = @folder
+    # escape for globbing
+    needs_escape = music.scan(/([\\\?\{\}\[\]\*])/)
+    needs_escape.flatten.uniq.each do |str|
+      music.gsub!(str, "\\#{str}")
+    end
+    Dir.glob(File.join(music, "*.mp3")).each do |file|
       Mp3Info.open(file) do |mp3|
         @tracks << mp3.tag
       end
@@ -81,15 +86,13 @@ private
   end
 
   def uniform_artist?
-    artist = Array.new
-    music = File.join(folder, "*.mp3")
-    Dir.glob(music).each do |file|
-      Mp3Info.open(file) do |mp3|
-        artist << mp3.tag.artist
-      end
+    artists = Array.new
+
+    @tracks.each do |tag|
+      artists << tag.artist
     end
 
-    if (artist.uniq.length > 1) || (artist.length == 0) || (artist.first.nil?)
+    if (artists.uniq.length > 1) || (artists.length == 0) || (artists.first.nil?)
       errors.nonuniform_artists << folder
       return false
     end
@@ -99,12 +102,9 @@ private
   def uniform_album?
     uniform = false
     albums = Array.new
-    music = File.join(folder, "*.mp3")
-    
-    Dir.glob(music).each do |file|
-      Mp3Info.open(file) do |mp3|
-        albums << mp3.tag.album
-      end
+
+    @tracks.each do |tag|
+      albums << tag.album
     end
 
     if (albums.uniq.length > 1)
@@ -121,12 +121,9 @@ private
   def has_all_tracks?
     has_all_tracks = false
     albums = Array.new
-    music = File.join(folder, "*.mp3")
     
-    Dir.glob(music).each do |file|
-      Mp3Info.open(file) do |mp3|
-        albums << mp3.tag.tracknum
-      end
+    @tracks.each do |tag|
+      albums << tag.tracknum
     end
 
     if (albums.length != albums.last.to_i) || (albums.length == 0)
@@ -168,26 +165,21 @@ private
   end
 
   def find_album
-    music = File.join(@folder, "*.mp3")
-    file = Dir.glob(music).first
-    return nil if file.nil?
-    mp3 = Mp3Info.new(file)
-    album = mp3.tag.album
+    tag = @tracks.first
+    return nil if tag.nil?
+    album = tag.album
     
     if album
-      album = cleanASCII(mp3.tag.album)
+      album = cleanASCII(album)
       @errors.unknown_tag << @folder if album.match(BAD_TAG)
     end
     album
   end
 
   def find_artist
-    music = File.join(@folder, "*.mp3")
-    file = Dir.glob(music).first
-    return nil if file.nil?
-    mp3 = Mp3Info.new(file)
-    
-    artist = mp3.tag.artist
+    tag = @tracks.first
+    return nil if tag.nil?
+    artist = tag.artist
     if artist
       artist = cleanASCII(artist)
       @errors.unknown_tag << @folder if artist.match(BAD_TAG)

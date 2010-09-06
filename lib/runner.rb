@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'mp3info'
+
 class Runner
   
   attr_accessor :all_artists, :root_dir, :folders, :scan_path, :destination
@@ -48,7 +51,7 @@ private
       Folder::ERROR_TYPES.each do |error_type|
         error_set = folder.errors.send(error_type)
         if error_set.length > 0
-          error_file = File.join(@root_dir, now + '.' + error_set.name)
+          error_file = File.join(now + '.' + error_set.name)
           File.open(error_file, 'a') do |f|
             error_set.errors.each do |item|
               msg = "#{item} #{error_set.msg}"

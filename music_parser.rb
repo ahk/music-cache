@@ -2,7 +2,6 @@
 
 $:.unshift("lib/")
 
-require "lib/mp3info"
 require "lib/levenshtein"
 require "lib/transforms"
 require "lib/folder"

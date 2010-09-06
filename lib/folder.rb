@@ -57,7 +57,7 @@ class Folder
     #Check if the album folder is populated
     #Move the music
     if !File.directory?(File.join(destination, @artist, @album))
-      Dir.mkdir_p(File.join(destination, @artist, @album))
+      FileUtils.mkdir_p(File.join(destination, @artist, @album))
     end
 
     if Dir.glob(File.join(destination, @artist, @album, "*.mp3")).empty?

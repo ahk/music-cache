@@ -31,15 +31,16 @@ class Folder
       :incomplete_tracks  => MPErrorSet.new('incomplete_tracks', "doesn't have as many tracks as the tags think ..."),
     })
     
-    map_tracks    
+    map_tracks
+    
+    @album     = find_album
+    @artist    = find_artist
+    @has_music = true if @artist || @album
       
     if uniform_album? && uniform_artist? && has_all_tracks?
       @complete = true
     end
     
-    @album     = find_album
-    @artist    = find_artist
-    @has_music = true if @artist || @album
   end
   
   def has_music?
@@ -55,12 +56,8 @@ class Folder
     #Check if the album folder exists
     #Check if the album folder is populated
     #Move the music
-    if !File.directory?(File.join(destination, @artist))
-      Dir.mkdir(File.join(destination, @artist))
-    end
-
     if !File.directory?(File.join(destination, @artist, @album))
-      Dir.mkdir(File.join(destination, @artist, @album))
+      Dir.mkdir_p(File.join(destination, @artist, @album))
     end
 
     if Dir.glob(File.join(destination, @artist, @album, "*.mp3")).empty?
@@ -205,7 +202,7 @@ private
     # I don't really understand how to represent ç or ã
     # as a single utf8 codepoint when written to a file.
     # it probably doesn't matter. readline seems fine with it?
-    Unicode.normalize_KC(text)
+    Unicode.normalize_C(text)
   end
   
 end

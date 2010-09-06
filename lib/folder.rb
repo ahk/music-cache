@@ -1,6 +1,5 @@
 require 'fileutils'
 require 'ostruct'
-require 'rubygems'
 require 'unicode'
 
 class Folder

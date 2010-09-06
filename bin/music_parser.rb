@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby -wKU
-
-$:.unshift("lib/")
+require "rubygems"
+require "bundler/setup"
 
 require "lib/levenshtein"
 require "lib/transforms"

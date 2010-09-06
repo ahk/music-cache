@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'mp3info'
 
 class Runner

@@ -8,4 +8,4 @@ require "lib/folder"
 require "lib/error_set"
 require "lib/runner"
 
-Runner.new.run
+MusicParser::Runner.new.run

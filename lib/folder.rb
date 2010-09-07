@@ -83,7 +83,7 @@ private
         Mp3Info.open(file) do |mp3|
           @tracks << mp3.tag
         end
-      rescue Mp3InfoError, NoMethodError => e
+      rescue Mp3InfoError => e
         puts "#{e.class}:#{e} in #{file}"
       end
     end

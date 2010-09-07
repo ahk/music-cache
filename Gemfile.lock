@@ -1,0 +1,25 @@
+GIT
+  remote: git://github.com/gzuki/ruby-mp3info.git
+  revision: 8f8e7a5
+  specs:
+    ruby-mp3info (0.6.13)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    columnize (0.3.1)
+    linecache (0.43)
+    ruby-debug (0.10.3)
+      columnize (>= 0.1)
+      ruby-debug-base (~> 0.10.3.0)
+    ruby-debug-base (0.10.3)
+      linecache (>= 0.3)
+    unicode (0.3.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ruby-debug
+  ruby-mp3info!
+  unicode

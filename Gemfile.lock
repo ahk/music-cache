@@ -7,11 +7,15 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
+    SystemTimer (1.2)
+    redis (2.0.6)
     unicode (0.3.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  SystemTimer
+  redis
   ruby-mp3info!
   unicode

@@ -46,13 +46,9 @@ module MusicParser
         Folder::ERROR_TYPES.each do |error_type|
           error_set = folder.errors.send(error_type)
           if error_set.length > 0
-            error_file = File.join(now + '.' + error_set.name)
-            File.open(error_file, 'a') do |f|
-              error_set.errors.each do |item|
-                msg = "#{item} #{error_set.msg}"
-                f.puts msg
-                puts msg
-              end
+            error_set.persist(now)
+            error_set.error_folders.each do |item|
+              puts "#{item} #{error_set.msg}"
             end
           end
         end

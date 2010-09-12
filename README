@@ -9,8 +9,21 @@ ruby music_parser.rb /home/TheDevelopment/unsorted /home/TheDevelopment/Music en
 
 By removing the 'enact' word, the program does a dry run.
 
-This program uses ruby-mp3info which can be found at:
-http://ruby-mp3info.rubyforge.org/
+IMPORTANT DEPENDENCY INFO (I will not be a dependency coward. Join me.):
+  We're using bundler here. You should to!
 
-And uses the ruby implimentation of Levenshtein distance, which can be found at:
-http://rubyforge.org/frs/?group_id=6257
+  FOR MY 1.8 USERS:
+    bundle install
+
+  FOR MY 1.9 USERS, 
+    currently broken: mp3info is broken in 1.9.2
+    I'm working on this problem.
+    
+    if you want to help ...
+    bundle install
+
+  This program uses ruby-mp3info which can be found at:
+  http://ruby-mp3info.rubyforge.org/
+
+  And uses the ruby implementation of Levenshtein distance, which can be found at:
+  http://rubyforge.org/frs/?group_id=6257

@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/gzuki/ruby-mp3info.git
-  revision: 8f8e7a5
+  revision: 8f8e7a553009e84f6a3fd2fe790f63554302dfd3
   specs:
     ruby-mp3info (0.6.13)
 

@@ -1,2 +1,4 @@
-#!/usr/bin/env sh
-ruby bin/music_parser.rb scan "/Users/andrew/Music/iTunes/iTunes Music/" "/Users/andrew/test_music_sort"
+#!/usr/bin/env ruby
+cmd = ARGV[0]
+sh = %Q(ruby bin/music_parser.rb #{cmd || 'scan'} "/Users/andrew/Music/iTunes/iTunes Music/" "/Users/andrew/test_music_sort")
+exec(sh)

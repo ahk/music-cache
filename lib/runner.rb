@@ -3,6 +3,8 @@ module MusicParser
   class Runner
     REDIS_ERRORS_KEY = 'errors'
     REDIS_LOG_TIMES_KEY = 'log_times'
+    REDIS_COMPLETE_FOLDERS_KEY = 'complete_folders'
+    REDIS_FOLDERS_KEY = 'folders'
   
     attr_accessor :all_artists, :root_dir, :folders, :scan_path, :destination, :redis
   
@@ -59,7 +61,7 @@ module MusicParser
     def log
       now = Time.now.strftime('%Y-%m-%d-%H%M%S')
       puts "*** Logging: #{now} ***"
-      @redis.lpush(REDIS_LOG_TIMES_KEY,now)
+      @redis.rpush(REDIS_LOG_TIMES_KEY,now)
       @folders.each do |folder|
         Folder::ERROR_TYPES.each do |error_type|
           error_set = folder.errors.send(error_type)
@@ -70,13 +72,20 @@ module MusicParser
             end
           end
         end
+        @redis.rpush("#{REDIS_FOLDERS_KEY}:#{now}", folder.folder)
+        @redis.rpush("#{REDIS_COMPLETE_FOLDERS_KEY}:#{now}", folder.folder) if folder.complete?
       end
       puts "*** Logging complete ***"
     end
     
     def analyze
-      last_run = @redis.lindex(REDIS_LOG_TIMES_KEY,0)
+      last_run = @redis.lindex(REDIS_LOG_TIMES_KEY,-1)
+      total_folders = @redis.llen("#{REDIS_FOLDERS_KEY}:#{last_run}")
+      completed = @redis.llen("#{REDIS_COMPLETE_FOLDERS_KEY}:#{last_run}")
+      
       puts "Analyzing last run: #{last_run}"
+      puts "#{completed} folders complete of #{total_folders}"
+      
       Folder::ERROR_TYPES.each do |error_type|
         error_set = @redis.lrange("#{REDIS_ERRORS_KEY}:#{last_run}:#{error_type}", 0, -1)
         puts "\t#{error_type}: #{error_set.size} folders"

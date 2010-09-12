@@ -3,20 +3,12 @@ require 'redis'
 module MusicParser
   
   class MP3ErrorSet
-    REDIS_ERRORS_KEY = 'errors'
     
-    attr_accessor :error_folders, :name, :msg
+    attr_accessor :error_folders, :error_type, :msg
   
-    def initialize(name, msg = nil)
-      begin
-        @redis = Redis.new
-      rescue => e
-        puts e.class
-        puts 'you must run the redis server first!'
-        exit
-      end
+    def initialize(error_type, msg = nil)
       @msg = msg
-      @name = name
+      @error_type = error_type
       @error_folders = []
     end
   
@@ -28,10 +20,10 @@ module MusicParser
       @error_folders << thing
     end
     
-    def persist(time_stamp)
-      key = keyify(time_stamp, REDIS_ERRORS_KEY, @name)
+    def log(time_stamp, redis)
+      key = keyify(Runner::REDIS_ERRORS_KEY, time_stamp, @error_type)
       @error_folders.each do |folder|
-        @redis.lpush(key,"#{folder}")
+        redis.lpush(key,"#{folder}")
       end
     end
     

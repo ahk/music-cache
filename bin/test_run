@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-ruby bin/music_parser.rb "/Users/andrew/Music/iTunes/iTunes Music/" "/Users/andrew/test_music_sort"
+ruby bin/music_parser.rb scan "/Users/andrew/Music/iTunes/iTunes Music/" "/Users/andrew/test_music_sort"

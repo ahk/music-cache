@@ -1,4 +1,6 @@
 require 'mp3info'
+require 'redis'
+
 module MusicParser
   class Runner
     REDIS_ERRORS_KEY = 'errors'
@@ -6,7 +8,7 @@ module MusicParser
     REDIS_COMPLETE_FOLDERS_KEY = 'complete_folders'
     REDIS_FOLDERS_KEY = 'folders'
   
-    attr_accessor :all_artists, :root_dir, :folders, :scan_path, :destination, :redis
+    attr_accessor :root_dir, :folders, :scan_path, :destination, :redis
   
     def initialize
       begin
@@ -18,7 +20,6 @@ module MusicParser
       end
       
       @root_dir = File.expand_path(File.dirname($0))
-      @all_artists = []
       @folders = []
       @command = ARGV[0]
       @scan_path = ARGV[1]
@@ -48,48 +49,15 @@ module MusicParser
     end
   
     def scan
-      files = File.join(@scan_path, "**", "*")
-      Dir.glob(files).each do |folder|
-        if File.directory?(folder)
-          puts "*** Scanning: #{folder} ***"
-          @folders << Folder.new(folder, self)
-        end
-      end
-      puts "*** Scan complete ***"
+      Scanner.new(@scan_path, @folders).scan
     end
   
     def log
-      now = Time.now.strftime('%Y-%m-%d-%H%M%S')
-      puts "*** Logging: #{now} ***"
-      @redis.rpush(REDIS_LOG_TIMES_KEY,now)
-      @folders.each do |folder|
-        Folder::ERROR_TYPES.each do |error_type|
-          error_set = folder.errors.send(error_type)
-          if error_set.length > 0
-            error_set.log(now, @redis)
-            error_set.error_folders.each do |item|
-              puts "#{item} #{error_set.msg}"
-            end
-          end
-        end
-        @redis.rpush("#{REDIS_FOLDERS_KEY}:#{now}", folder.folder)
-        @redis.rpush("#{REDIS_COMPLETE_FOLDERS_KEY}:#{now}", folder.folder) if folder.complete?
-      end
-      puts "*** Logging complete ***"
+      Logger.new(@redis, @folders).log
     end
     
     def analyze
-      last_run = @redis.lindex(REDIS_LOG_TIMES_KEY,-1)
-      total_folders = @redis.llen("#{REDIS_FOLDERS_KEY}:#{last_run}")
-      completed = @redis.llen("#{REDIS_COMPLETE_FOLDERS_KEY}:#{last_run}")
-      
-      puts "Analyzing last run: #{last_run}"
-      puts "#{completed} folders complete of #{total_folders}"
-      
-      Folder::ERROR_TYPES.each do |error_type|
-        error_set = @redis.lrange("#{REDIS_ERRORS_KEY}:#{last_run}:#{error_type}", 0, -1)
-        puts "\t#{error_type}: #{error_set.size} folders"
-      end
+      Analyzer.new(@redis).puts_stdout
     end
     
     def migrate

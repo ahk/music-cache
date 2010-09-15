@@ -18,17 +18,17 @@ module MusicParser
 
     attr_accessor :folder, :artist, :album, :complete, :tracks, :errors
 
-    def initialize(folder, runner)
+    def initialize(folder, artist_list)
       @folder = folder
       @tracks = Array.new
-      @artist_list = runner.all_artists
+      @artist_list = artist_list
       @errors = OpenStruct.new({
-        :non_music_folder   => MP3ErrorSet.new('non_music_folder', 'has no music files as direct children'),
-        :unknown_tag        => MP3ErrorSet.new('unknown_tag', 'has an unknown tag in it'),
-        :nonuniform_artists => MP3ErrorSet.new('nonuniform_artists', 'has nonuniform artists'),
-        :nonuniform_albums  => MP3ErrorSet.new('nonuniform_albums', 'has nonuniform albums'),
-        :already_files      => MP3ErrorSet.new('already_files', 'already has files in it'),
-        :incomplete_tracks  => MP3ErrorSet.new('incomplete_tracks', "doesn't have as many tracks as the tags think ..."),
+        :non_music_folder   => ErrorSet.new('non_music_folder', 'has no music files as direct children'),
+        :unknown_tag        => ErrorSet.new('unknown_tag', 'has an unknown tag in it'),
+        :nonuniform_artists => ErrorSet.new('nonuniform_artists', 'has nonuniform artists'),
+        :nonuniform_albums  => ErrorSet.new('nonuniform_albums', 'has nonuniform albums'),
+        :already_files      => ErrorSet.new('already_files', 'already has files in it'),
+        :incomplete_tracks  => ErrorSet.new('incomplete_tracks', "doesn't have as many tracks as the tags think ..."),
       })
     
       map_tracks

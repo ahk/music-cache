@@ -1,8 +1,5 @@
-require 'redis'
-
 module MusicParser
-  
-  class MP3ErrorSet
+  class ErrorSet
     
     attr_accessor :error_folders, :error_type, :msg
   

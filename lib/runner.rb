@@ -1,24 +1,9 @@
-require 'mp3info'
-require 'redis'
-
 module MusicParser
   class Runner
-    REDIS_ERRORS_KEY = 'errors'
-    REDIS_LOG_TIMES_KEY = 'log_times'
-    REDIS_COMPLETE_FOLDERS_KEY = 'complete_folders'
-    REDIS_FOLDERS_KEY = 'folders'
-  
-    attr_accessor :root_dir, :folders, :scan_path, :destination, :redis
+    attr_accessor :root_dir, :folders, :scan_path, :destination
   
     def initialize
-      begin
-        @redis = Redis.new
-      rescue Exception => e
-        puts e.class
-        puts 'you must run the redis server first!'
-        exit
-      end
-      
+      @db = Database.new
       @root_dir = File.expand_path(File.dirname($0))
       @folders = []
       @command = ARGV[0]
@@ -53,11 +38,11 @@ module MusicParser
     end
   
     def log
-      Logger.new(@redis, @folders).log
+      Logger.new(@db, @folders).log
     end
     
     def analyze
-      Analyzer.new(@redis).puts_stdout
+      Analyzer.new(@db).puts_stdout
     end
     
     def migrate

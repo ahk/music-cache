@@ -9,5 +9,6 @@ require "lib/analyzer"
 require "lib/folder"
 require "lib/error_set"
 require "lib/runner"
+require "lib/database"
 
 MusicParser::Runner.new.run

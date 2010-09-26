@@ -1,6 +1,7 @@
 require 'fileutils'
 require 'ostruct'
 require 'unicode'
+require 'mp3info'
 
 module MusicParser
   class Folder

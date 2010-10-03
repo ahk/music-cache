@@ -83,7 +83,7 @@ module MusicParser
       Dir.glob(File.join(music, "*.mp3")).each do |file|
         begin
           Mp3Info.open(file) do |mp3|
-            @tracks << mp3.tag
+            @tracks << Track.new(file, mp3.tag)
           end
         rescue Mp3InfoError => e
           puts "#{e.class}:#{e} in #{file}"
@@ -95,8 +95,8 @@ module MusicParser
     def uniform_artist?
       artists = Array.new
 
-      @tracks.each do |tag|
-        artists << tag.artist
+      @tracks.each do |track|
+        artists << track.tags.artist
       end
 
       if (artists.uniq.length > 1) || (artists.length == 0) || (artists.first.nil?)
@@ -110,8 +110,8 @@ module MusicParser
       uniform = false
       albums = Array.new
 
-      @tracks.each do |tag|
-        albums << tag.album
+      @tracks.each do |track|
+        albums << track.tags.album
       end
 
       if (albums.uniq.length > 1)
@@ -129,8 +129,8 @@ module MusicParser
       has_all_tracks = false
       albums = Array.new
     
-      @tracks.each do |tag|
-        albums << tag.tracknum
+      @tracks.each do |track|
+        albums << track.tags.tracknum
       end
 
       if (albums.length != albums.last.to_i) || (albums.length == 0)
@@ -172,9 +172,9 @@ module MusicParser
     end
 
     def find_album
-      tag = @tracks.first
-      return nil if tag.nil?
-      album = tag.album
+      track = @tracks.first
+      return nil if track.nil?
+      album = track.tags.album
     
       if album
         album = cleanASCII(album)
@@ -184,9 +184,10 @@ module MusicParser
     end
 
     def find_artist
-      tag = @tracks.first
-      return nil if tag.nil?
-      artist = tag.artist
+      track = @tracks.first
+      return nil if track.nil?
+      artist = track.tags.artist
+      
       if artist
         artist = cleanASCII(artist)
         @errors.unknown_tag << @folder if artist.match(BAD_TAG)

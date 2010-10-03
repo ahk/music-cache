@@ -7,9 +7,10 @@ module MusicParser
       @root_dir = File.expand_path(File.dirname($0))
       @folders = []
       @command = ARGV[0]
-      @scan_path = ARGV[1]
-      @destination = ARGV[2]
-      @dry_run = (ARGV[3] != "enact")
+      @collection = Collection.new(ARGV[1])
+      @scan_path = ARGV[2]
+      @destination = ARGV[3]
+      @dry_run = (ARGV[4] != "enact")
       raise "Must specify a scan path and destination" unless @scan_path && @destination
     end
     
@@ -34,11 +35,11 @@ module MusicParser
     end
   
     def scan
-      Scanner.new(@scan_path, @folders).scan
+      Scanner.new(@scan_path, @folders, @collection).scan
     end
   
     def log
-      Logger.new(@db, @folders).log
+      Logger.new(@db, @folders, @collection).log
     end
     
     def analyze

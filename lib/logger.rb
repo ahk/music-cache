@@ -1,8 +1,9 @@
 module MusicParser
   class Logger
-    def initialize(db, folders)
+    def initialize(db, folders, collection)
       @db = db
       @folders = folders
+      @collection = collection
       @now = nil
     end
     
@@ -11,7 +12,7 @@ module MusicParser
       puts "*** Logging: #{@now} ***"
       @db.rpush(Database::REDIS_LOG_TIMES_KEY, @now)
       log_folders
-      log_collections
+      log_collection
       puts "*** Logging complete ***"
     end
     
@@ -31,8 +32,8 @@ module MusicParser
       end
     end
     
-    def log_collections
-      
+    def log_collection
+      @db.store(@collection, @now)
     end
   end
 end

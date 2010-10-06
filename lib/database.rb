@@ -46,6 +46,9 @@ module MusicParser
     # track id that can be constructed from other lists
     def store_collection(collection)
       collections_key = Database::REDIS_COLLECTIONS_KEY
+      @db.keys("collections:@{collection.name}").each do |old_key|
+        @db.del(old_key)
+      end
       @db.sadd(collections_key, collection.name)
       collection_part = keyify(collections_key, collection.name)
       

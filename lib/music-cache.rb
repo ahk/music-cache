@@ -1,4 +1,3 @@
-require "music-cache/version"
 require "music-cache/levenshtein"
 require "music-cache/logger"
 require "music-cache/scanner"

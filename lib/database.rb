@@ -77,6 +77,19 @@ module MusicParser
       end
     end
     
+    # collections:test:Animal Collective:Sung Tongs:/Users/andrew/Music/iTunes/iTunes Music/Animal Collective/Sung Tongs/11 Good Lovin Outside.mp3
+    def get_artists(collection)
+      @db.smembers(keyify(REDIS_COLLECTIONS_KEY, collection, REDIS_ARTISTS_KEY))
+    end
+    
+    def get_albums(collection, artist)
+      @db.smembers(keyify(REDIS_COLLECTIONS_KEY, collection, artist, REDIS_ALBUMS_KEY))
+    end
+    
+    def get_tracks(collection, artist, album)
+      @db.smembers(keyify(REDIS_COLLECTIONS_KEY, collection, artist, album, REDIS_TRACKS_KEY))
+    end
+    
     # redis passthrough
     
     def lindex(*args)

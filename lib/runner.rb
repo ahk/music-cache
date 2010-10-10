@@ -33,6 +33,10 @@ module MusicParser
       scan
       log
     end
+    
+    def run_query
+      query
+    end
   
     def scan
       Scanner.new(@scan_path, @folders, @collection).scan
@@ -44,6 +48,18 @@ module MusicParser
     
     def analyze
       Analyzer.new(@db).puts_stdout
+    end
+    
+    def query
+      coll = 'test'
+      artist = 'Animal Collective'
+      album = 'Sung Tongs'
+      puts "ARTISTS: #{coll}"
+      puts @db.get_artists(coll)
+      puts "ALBUMS: #{artist}"
+      puts @db.get_albums(coll, artist)
+      puts "TRACKS: #{artist}, #{album}"
+      puts @db.get_tracks(coll, artist, album)
     end
     
     def migrate

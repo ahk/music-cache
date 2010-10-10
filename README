@@ -9,9 +9,9 @@ You could use MusicCache to do these things!
 Music cache is written in ruby, and stores in Redis (<= 2.0). 
 
 it is executed by:
-ruby music-cache.rb origin destination enact
+music-cache origin destination enact
 e.g.
-ruby music-cache.rb /home/YourUser/unsorted /home/YourUser/Music enact
+music-cache /home/YourUser/unsorted /home/YourUser/Music enact
 
 By removing the 'enact' word, the program does a dry run.
 

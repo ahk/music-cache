@@ -1,7 +1,3 @@
-#!/usr/bin/env ruby -wKU
-require "rubygems"
-require "bundler/setup"
-
 require "lib/levenshtein"
 require "lib/logger"
 require "lib/scanner"
@@ -15,5 +11,3 @@ require "lib/collection"
 require "lib/artist"
 require "lib/album"
 require "lib/track"
-
-MusicCache::Runner.new.run

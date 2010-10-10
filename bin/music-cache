@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby -wKU
+require "rubygems"
+require "bundler/setup"
+
+require 'lib/music-cache'
+
+MusicCache::Runner.new.run

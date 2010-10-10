@@ -1,4 +1,4 @@
-module MusicParser
+module MusicCache
   class Scanner
     def initialize(scan_path, folders, collection)
       @scan_path = scan_path

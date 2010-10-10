@@ -1,4 +1,4 @@
-module MusicParser
+module MusicCache
   class Track
     
     attr_accessor :path, :tags

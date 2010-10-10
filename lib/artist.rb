@@ -1,4 +1,4 @@
-module MusicParser
+module MusicCache
   class Artist
     
     attr_accessor :name, :albums

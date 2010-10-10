@@ -8,7 +8,7 @@ rescue LoadError
   end
 end
 
-module MusicParser
+module MusicCache
 
   # The Levenshtein distance is a metric for measuring the amount
   # of difference between two sequences (i.e., the so called edit

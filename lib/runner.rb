@@ -1,4 +1,4 @@
-module MusicParser
+module MusicCache
   class Runner
     attr_accessor :root_dir, :folders, :scan_path, :destination
   

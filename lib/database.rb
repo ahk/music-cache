@@ -1,6 +1,6 @@
 require 'redis'
 
-module MusicParser
+module MusicCache
   class Database
     # stats
     REDIS_ERRORS_KEY = 'errors'

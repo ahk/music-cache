@@ -1,4 +1,4 @@
-module MusicParser
+module MusicCache
   class Logger
     def initialize(db, folders, collection)
       @db = db

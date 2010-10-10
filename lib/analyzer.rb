@@ -1,4 +1,4 @@
-module MusicParser
+module MusicCache
   class Analyzer
     def initialize(db)
       @db = db

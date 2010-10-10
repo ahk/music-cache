@@ -16,4 +16,4 @@ require "lib/artist"
 require "lib/album"
 require "lib/track"
 
-MusicParser::Runner.new.run
+MusicCache::Runner.new.run

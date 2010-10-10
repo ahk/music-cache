@@ -3,7 +3,7 @@ require 'ostruct'
 require 'unicode'
 require 'mp3info'
 
-module MusicParser
+module MusicCache
   class Folder
   
     ERROR_TYPES = [

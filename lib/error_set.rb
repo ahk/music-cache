@@ -1,4 +1,4 @@
-module MusicParser
+module MusicCache
   class ErrorSet
     
     attr_accessor :error_folders, :error_type, :msg

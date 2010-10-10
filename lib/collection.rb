@@ -1,5 +1,5 @@
 
-module MusicParser
+module MusicCache
   class Collection
     
     attr_accessor :name, :artists

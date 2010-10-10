@@ -1,11 +1,17 @@
-Ruby ID3 Sort
+MusicCache
 
-The idea of this program is to take an unsorted music folded and move all the tracks to a destination based on the ID3 tagging.
+You have a lot of music files (mp3 support only for now). You want to know what you have, where you have it, and what shape it's in (duplicates, encodings, size, track completion, mislabelings).
+
+You'd also like to be able to query this data, for use in other programs – say a web based music player like FTANG (http://github.com/maxogden/ftang).
+
+You could use MusicCache to do these things!
+
+Music cache is written in ruby, and stores in Redis (<= 2.0). 
 
 it is executed by:
-ruby music_parser.rb origin destination enact
+ruby music-cache.rb origin destination enact
 e.g.
-ruby music_parser.rb /home/TheDevelopment/unsorted /home/TheDevelopment/Music enact
+ruby music-cache.rb /home/YourUser/unsorted /home/YourUser/Music enact
 
 By removing the 'enact' word, the program does a dry run.
 
@@ -27,3 +33,5 @@ IMPORTANT DEPENDENCY INFO (I will not be a dependency coward. Join me.):
 
   And uses the ruby implementation of Levenshtein distance, which can be found at:
   http://rubyforge.org/frs/?group_id=6257
+  
+This program was originally inspired by TheDevelopment's ruby-id3-sort, and still resembles it in a few places. please see http://github.com/TheDevelopment/ruby-id3-sort

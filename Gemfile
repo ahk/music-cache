@@ -6,3 +6,6 @@ gem 'ruby-mp3info',
 gem 'unicode'
 gem 'redis'
 gem 'SystemTimer'
+
+# Specify your gem's dependencies in music-cache.gemspec
+gemspec

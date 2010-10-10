@@ -2,6 +2,8 @@
 require "rubygems"
 require "bundler/setup"
 
-require 'lib/music-cache'
+# leading ../ just gets the expanded path of the current __FILE__
+# to its parent dir
+require File.expand_path("../../lib/music-cache", __FILE__)
 
 MusicCache::Runner.new.run

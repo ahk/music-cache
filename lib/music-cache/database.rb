@@ -71,6 +71,9 @@ module MusicCache
             track.tags.each do |tag_name, tag_val|
               @db.hset(track_key, tag_name, tag_val)
             end
+            # path needs to be included in the track hash, since the
+            # full key containing the path might not be in context
+            @db.hset(track_key, 'path', track.path)
           end
           
         end
@@ -88,6 +91,10 @@ module MusicCache
     
     def get_tracks(collection, artist, album)
       @db.smembers(keyify(REDIS_COLLECTIONS_KEY, collection, artist, album, REDIS_TRACKS_KEY))
+    end
+    
+    def get_tags(collection, artist, album, track_path)
+      @db.hgetall( keyify(REDIS_COLLECTIONS_KEY, collection, artist, album, track_path) )
     end
     
     # redis passthrough

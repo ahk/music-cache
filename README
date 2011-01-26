@@ -16,7 +16,7 @@ music-cache /home/YourUser/unsorted /home/YourUser/Music enact
 By removing the 'enact' word, the program does a dry run.
 
 IMPORTANT DEPENDENCY INFO (I will not be a dependency coward. Join me.):
-  We're using bundler here. You should to!
+  We're using bundler here. You should too!
 
   FOR MY 1.8 USERS:
     bundle install

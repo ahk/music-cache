@@ -15,8 +15,8 @@ module MusicCache
     
   private
     def get_or_make_artist(name)
-      artist = @artists.detect do |artist|
-        artist.name == name
+      artist = @artists.detect do |artist_to_be_named|
+        artist_to_be_named.name == name
       end
       
       unless artist

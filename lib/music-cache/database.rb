@@ -69,7 +69,7 @@ module MusicCache
             track_key = keyify(album_part, track.path)
             puts track_key + ' : ' + track_key.size.to_s
             track.tags.each do |tag_name, tag_val|
-              @db.hset(track_key, tag_name, tag_val)
+              @db.hset(track_key, tag_name, tag_val.to_s.force_encoding("UTF-8"))
             end
             # path needs to be included in the track hash, since the
             # full key containing the path might not be in context

@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/gzuki/ruby-mp3info.git
+  remote: git://github.com/ahk/ruby-mp3info.git
   revision: 8f8e7a553009e84f6a3fd2fe790f63554302dfd3
   specs:
     ruby-mp3info (0.6.13)
@@ -12,7 +12,6 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    SystemTimer (1.2)
     redis (2.0.6)
     unicode (0.3.1)
 
@@ -20,7 +19,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  SystemTimer
   bundler (>= 1.0.0)
   music-cache!
   redis

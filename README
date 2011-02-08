@@ -9,9 +9,9 @@ You could use MusicCache to do these things!
 Music cache is written in ruby, and stores in Redis. 
 
 it is executed by:
-music-cache scan mp3_folder collection_name
+music-cache scan redis_collection_name mp3_folder 
 e.g.
-music-cache scan /home/YourUser/Music my_music_db
+music-cache scan my_music_db /home/YourUser/Music 
 
 IMPORTANT DEPENDENCY INFO (I will not be a dependency coward. Join me.):
   We're using bundler here. You should to!

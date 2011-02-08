@@ -11,7 +11,6 @@ module MusicCache
       @scan_path = ARGV[2]
       @destination = ARGV[3]
       @dry_run = (ARGV[4] != "enact")
-      raise "Must specify a scan path and destination" unless @scan_path && @destination
     end
     
     def run
@@ -20,16 +19,19 @@ module MusicCache
   
   private
     def run_migration
+      raise "Must specify a scan path and destination to migrate to" unless @scan_path && @destination
       scan
       log
       migrate
     end
   
     def run_analyze
+      raise "Must specify a collection name to analyze" unless @collection
       analyze
     end
   
     def run_scan
+      raise "Must specify a collection name and scan path to scan" unless @scan_path && @collection
       scan
       log
     end

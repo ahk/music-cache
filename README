@@ -6,26 +6,17 @@ You'd also like to be able to query this data, for use in other programs – say
 
 You could use MusicCache to do these things!
 
-Music cache is written in ruby, and stores in Redis (<= 2.0). 
+Music cache is written in ruby, and stores in Redis. 
 
 it is executed by:
-music-cache origin destination enact
+music-cache scan redis_collection_name mp3_folder 
 e.g.
-music-cache /home/YourUser/unsorted /home/YourUser/Music enact
-
-By removing the 'enact' word, the program does a dry run.
+music-cache scan my_music_db /home/YourUser/Music 
 
 IMPORTANT DEPENDENCY INFO (I will not be a dependency coward. Join me.):
   We're using bundler here. You should to!
 
-  FOR MY 1.8 USERS:
-    bundle install
-
-  FOR MY 1.9 USERS, 
-    currently broken: mp3info is broken in 1.9.2
-    I'm working on this problem.
-    
-    if you want to help ...
+  FOR RUBY 1.8 & 1.9 USERS:
     bundle install
 
   This program uses ruby-mp3info which can be found at:

@@ -14,8 +14,8 @@ module MusicCache
     
   private
     def get_or_make_album(name)
-      album = @albums.detect do |album|
-        album.name == name
+      album = @albums.detect do |album_to_be_named|
+        album_to_be_named.name == name
       end
       unless album
         album = Album.new(name)

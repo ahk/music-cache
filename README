@@ -14,7 +14,7 @@ e.g.
 music-cache scan my_music_db /home/YourUser/Music 
 
 IMPORTANT DEPENDENCY INFO (I will not be a dependency coward. Join me.):
-  We're using bundler here. You should to!
+  We're using bundler here. You should too!
 
   FOR RUBY 1.8 & 1.9 USERS:
     bundle install
